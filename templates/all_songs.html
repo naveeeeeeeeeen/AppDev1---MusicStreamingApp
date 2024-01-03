@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body{
+            font-family:'Times New Roman', Times, serif
+        }
+        h2{
+            margin-top: 20px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+        #logout{
+            margin-left: 1000px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #cfe6f6;">
+        <b class="navbar-brand"> @{{user.name}} </b>
+        <div class="collapse navbar-collapse">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="{{url_for('user_dashboard')}}">Dashboard</a>
+                <a class="nav-item nav-link" href="{{url_for('user_profile')}}">Profile</a>
+                <a id="logout" class="nav-item nav-link" href="{{url_for('login')}}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <h2>All Songs</h2>
+        <div class="row">
+            {% for song in songs | sort(attribute='name') %}
+                <div class="col-lg-3 col-md-4 col-6 mb-4 song-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title"><h5>{{ song.name }}</h5></p>
+                            <p class="card-text">Album: {{ song.album.name }}</p>
+                            <p class="card-text">Artist: {{ song.creator_name }}</p>
+                            <p class="card-text">Genre: {{ song.genre }}</p>
+                            <p class="card-text">Length: {{ song.duration }} seconds</p>
+                            <p class="card-text">Likes: {{ song.likes }}</p>
+                            <p class="card-text">Views: {{ song.play_count }}</p>
+                            <a href="{{url_for('play', lyrics= song.lyrics, song_id = song.id)}}" class="btn btn-info">Play</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="javascript:window.history.back();" class="btn btn-secondary">Back</a>
+    </div>
+</body>
+</html>
